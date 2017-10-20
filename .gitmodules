@@ -1,0 +1,6 @@
+[submodule "external/ctti"]
+	path = external/ctti
+	url = https://github.com/Manu343726/ctti
+[submodule "external/MyHeaders"]
+	path = external/MyHeaders
+	url = https://github.com/pkjq/MyHeaders

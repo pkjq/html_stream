@@ -1,0 +1,22 @@
+function(FixLibrary LibName)
+	if (WIN32)
+		get_property(LibPropertyType 		TARGET ${LibName} PROPERTY 		TYPE)
+		get_property(LibExportAllSymbols 	TARGET ${LibName} PROPERTY 		WINDOWS_EXPORT_ALL_SYMBOLS)
+		
+		if((LibPropertyType STREQUAL SHARED_LIBRARY) AND (NOT LibExportAllSymbols))
+			set(DEF_LIB_NAME ${LibName})
+			string(REGEX REPLACE "[-.]" "_" DEF_LIB_NAME ${LibName})
+			string(TOUPPER ${DEF_LIB_NAME} DEF_LIB_NAME)
+			
+			target_compile_definitions(${LibName} INTERFACE 	IMPORT_EXPORT_${DEF_LIB_NAME}_IFACE)
+			target_compile_definitions(${LibName} PUBLIC		IMPORT_EXPORT_${DEF_LIB_NAME}_PUBLIC)
+			target_compile_definitions(${LibName} PRIVATE		IMPORT_EXPORT_${DEF_LIB_NAME}_PRIVATE)
+			
+			message(STATUS "~~ Library '${LibName}' compiled as SHARED ~~")
+			message(STATUS ">> defined IMPORT_EXPORT_${DEF_LIB_NAME}_IFACE")
+			message(STATUS ">> defined IMPORT_EXPORT_${DEF_LIB_NAME}_PUBLIC")
+			message(STATUS ">> defined IMPORT_EXPORT_${DEF_LIB_NAME}_PRIVATE")
+			message(STATUS "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~")
+		endif()
+	endif()
+endfunction()
