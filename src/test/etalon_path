@@ -1,0 +1,8 @@
+#ifndef GB5DD222A_E8DA_4748_9886_4803CFC1F75E
+#define GB5DD222A_E8DA_4748_9886_4803CFC1F75E
+
+
+static constexpr const char *EtalonHtmlPath = "${CMAKE_CURRENT_SOURCE_DIR}/etalon.html";
+
+
+#endif//GB5DD222A_E8DA_4748_9886_4803CFC1F75E
