@@ -1,0 +1,41 @@
+version: 2.1.5.{build}
+
+image:
+  - Visual Studio 2015
+  - Visual Studio 2017
+
+platform:
+  - x64
+  - x86
+    
+configuration:
+  - Release
+  
+environment:
+    global:
+      BOOST_ROOT: C:\Libraries\boost_1_60_0
+      GTEST_ROOT: C:\Program Files (x86)\googletest-distribution
+  
+before_build:
+  - if "%PLATFORM%"=="x64" set CmakeArchitecture=-DCMAKE_GENERATOR_PLATFORM=X64
+
+build_script:
+  - appveyor DownloadFile https://github.com/google/googletest/archive/master.zip -FileName googletest-master.zip
+  - 7z x googletest-master.zip > NUL
+  - cd googletest-master
+  - md build
+  - cd build
+  - cmake -DBUILD_SHARED_LIBS=0 -Dgtest_force_shared_crt=1 -DCMAKE_BUILD_TYPE=%CONFIGURATION% %CmakeArchitecture% ..
+  - cmake --build . --config %CONFIGURATION% --target INSTALL
+  - cd ../..
+  - git submodule init
+  - git submodule update
+  - mkdir build
+  - cd build
+  - SET GTEST_ROOT=C:\Program Files (x86)\googletest-distribution
+  - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% %CmakeArchitecture%
+  - cmake --build . --config %CONFIGURATION%
+
+
+test_script:
+  - ctest -C %CONFIGURATION% --output-on-failure
