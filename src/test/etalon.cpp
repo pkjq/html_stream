@@ -4,6 +4,7 @@
 #include <html/head.h>
 #include <html/head/title.h>
 #include <html/head/meta.h>
+#include <html/head/css.h>
 #include <html/body.h>
 
 #include <html/link.h>
@@ -20,9 +21,46 @@
 #include <fstream>
 
 
+static std::wstring Stream2Str(std::wistream &stream)
+{
+	std::wstring data;
+
+	std::wstring buffer;
+	while (stream.good())
+	{
+		stream >> buffer;
+		data += buffer;
+	}
+
+	return data;
+}
+
+static std::wstring ClearFromNonFunctionalSymbols(std::wstring data)
+{
+	const auto it = std::remove_if(std::begin(data), std::end(data), [](const auto ch)
+	{
+		switch (ch)
+		{
+		case L'\n':
+		case L'\t':
+		case L' ':
+			return true;
+
+		default:
+			return false;
+		}
+	});
+
+	data.erase(it, std::end(data));
+
+	return data;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
 TEST(html, CompareWithEtalon)
 {
-	constexpr const char *filePath = EtalonHtmlPath;
+	const auto filePath = std::string(EtalonHtmlPath) + "/etalon.html";
 
 
 	html::Html html;
@@ -32,9 +70,22 @@ TEST(html, CompareWithEtalon)
 
 		head << (html::head::Title() << "Title");
 
-		head << html::head::Meta(L"author",		L"SD");
-		head << html::head::Meta(L"charset",	L"utf-8");
-		head << html::head::Meta(L"generator",	L"Test html");
+		head << html::head::Meta(L"keywords",	L"html generator");
+		head << html::head::meta::Author(L"SD");
+		head << html::head::meta::Charset(L"utf-8");
+		head << html::head::meta::Generator(L"Test html");
+
+		{ // CSS
+			html::head::Css css;
+
+			const auto cssFilePath = std::string(EtalonHtmlPath) + "/css.css";
+
+			std::wfstream cssFile;
+			cssFile.open(cssFilePath.c_str(), std::fstream::in);
+			css << cssFile.rdbuf();
+
+			head << css;
+		}
 
 		html << head;
 	}
@@ -86,7 +137,7 @@ TEST(html, CompareWithEtalon)
 
 		body << (html::Comment() << "this is " << "comment\n" << "This is line two of comment");
 
-		html::Attribute titleAttr(L"title=\"This is title of div\"");
+		const html::attribute::Title titleAttr(L"This is title of div");
 
 		{
 			html::Div div;
@@ -145,7 +196,7 @@ TEST(html, CompareWithEtalon)
 	if (0)
 	{
 		std::wfstream fileStream;
-		fileStream.open(filePath, std::fstream::out);
+		fileStream.open(filePath.c_str(), std::fstream::out);
 		ASSERT_TRUE(fileStream.is_open());
 
 		fileStream << html;
@@ -157,18 +208,13 @@ TEST(html, CompareWithEtalon)
 		dynamicHtml.seekp(0);
 
 		std::wfstream etalonHtml;
-		etalonHtml.open(filePath, std::fstream::in);
+		etalonHtml.open(filePath.c_str(), std::fstream::in);
 		ASSERT_TRUE(etalonHtml.is_open());
 
-		std::wstring generated;
-		std::wstring etalon;
-		while (etalonHtml.good() && dynamicHtml.good())
-		{
-			etalonHtml	>> etalon;
-			dynamicHtml >> generated;
+		const std::wstring generated	= ClearFromNonFunctionalSymbols(Stream2Str(dynamicHtml));
+		const std::wstring etalon		= ClearFromNonFunctionalSymbols(Stream2Str(etalonHtml));
 
-			EXPECT_EQ(etalon, generated);
-		}
+		EXPECT_EQ(etalon, generated);
 
 		EXPECT_TRUE(etalonHtml.eof() == dynamicHtml.eof());
 	}

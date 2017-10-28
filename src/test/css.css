@@ -1,0 +1,16 @@
+.collapsible .content,
+.collapsible [type="checkbox"]
+{
+	display:none;
+}
+
+.collapsible [type="checkbox"]:checked ~.content
+{
+	display:block;
+}
+
+
+.threadStack
+{
+	color:red;
+}

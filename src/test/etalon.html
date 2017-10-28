@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head><title>Title</title>
+<head>
+<title>
+Title</title>
+<meta name="keywords" content="html generator">
 <meta name="author" content="SD">
 <meta name="charset" content="utf-8">
 <meta name="generator" content="Test html">
+<style>
+.collapsible .content,
+.collapsible [type="checkbox"]
+{
+	display:none;
+}
+
+.collapsible [type="checkbox"]:checked ~.content
+{
+	display:block;
+}
+
+
+.threadStack
+{
+	color:red;
+}
+</style>
 </head>
 <body style="background-color:lightblue">Line 1.1:Line 1.2<br>
 Line 2.1:Line 2.2<br>
