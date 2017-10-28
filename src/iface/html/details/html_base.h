@@ -37,7 +37,7 @@ struct BlockStreamTemplateMethod: private ITag
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
 	>
 	inline auto& operator << (const Type *data)
 	{
@@ -46,7 +46,7 @@ struct BlockStreamTemplateMethod: private ITag
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
 	>
 	inline auto& operator << (Type &&data)
 	{
@@ -58,14 +58,14 @@ public:
 	////////////////////
 	// in own decorators
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator << (Type &data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &data)
 	{
 		inLvalue(data);
 		return *this;
 	}
  
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator << (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
 		inRvalue(ctti::unnamed_type_id<Type>(), data);
 		return *this;
@@ -73,14 +73,14 @@ public:
 
 	// revert own decorators
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
 	{
 		outRvalue(ctti::unnamed_type_id<Type>());
 		return *this;
 	}
 
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<IRevert, Type>, BlockStreamTemplateMethod>& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<IRevert, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
 	{
 		outRvalue(static_cast<ctti::unnamed_type_id_t>(data));
 		return *this;

@@ -23,7 +23,7 @@ public:
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
 	>
 		inline auto& operator << (const Type *data)
 	{
@@ -32,7 +32,7 @@ public:
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
 	>
 		inline auto& operator << (Type &&data)
 	{
