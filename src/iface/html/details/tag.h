@@ -3,6 +3,7 @@
 
 
 #include <html/details/html_base.h>
+#include <string>
 
 
 namespace html
@@ -19,8 +20,8 @@ public:
 	{}
 
 private: // ITag
-	virtual std::wstring openTag() const override;
-	virtual std::wstring closeTag() const override;
+	virtual std::wstring openTag() const override	{ return tagOpen;	}
+	virtual std::wstring closeTag() const override	{ return tagClose;	}
 
 protected:
 	const std::wstring tagOpen;

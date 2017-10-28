@@ -13,16 +13,6 @@ class Html final : public details::Tag
 {
 public:
 	Html();
-
-	inline details::BlockStreamTemplateMethod& operator << (Body &body)
-	{
-		return static_cast<details::BlockStreamTemplateMethod&>(*this) << body;
-	}
-
-	inline BlockStreamTemplateMethod& operator << (Head &body)
-	{
-		return static_cast<BlockStreamTemplateMethod&>(*this) << body;
-	}
 };
 }
 

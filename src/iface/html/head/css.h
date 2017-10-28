@@ -1,5 +1,5 @@
-#ifndef GA6C61C30_037D_49C3_A949_E3E2485F66C4
-#define GA6C61C30_037D_49C3_A949_E3E2485F66C4
+#ifndef G760AE60F_CEC9_4DBD_B6CC_2459A83CA1BB
+#define G760AE60F_CEC9_4DBD_B6CC_2459A83CA1BB
 
 
 #include <html/details/symetric_tag.h>
@@ -9,10 +9,10 @@ namespace html
 {
 namespace head
 {
-class Title final : public details::SymetricTag
+class Css final : public details::SymetricTag
 {
 public:
-	Title(): SymetricTag(L"title") {}
+	Css(): SymetricTag(L"style", false) {}
 
 public:
 	// std stream functionality
@@ -25,7 +25,7 @@ public:
 	template <typename Type,
 		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
 	>
-	inline auto& operator << (const Type *data)
+		inline auto& operator << (const Type *data)
 	{
 		static_cast<details::BlockStreamTemplateMethod&>(*this) << data;
 		return *this;
@@ -34,7 +34,7 @@ public:
 	template <typename Type,
 		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
 	>
-	inline auto& operator << (Type &&data)
+		inline auto& operator << (Type &&data)
 	{
 		static_cast<details::BlockStreamTemplateMethod&>(*this) << std::forward<Type>(data);
 		return *this;
@@ -44,4 +44,4 @@ public:
 }
 
 
-#endif//GA6C61C30_037D_49C3_A949_E3E2485F66C4
+#endif//G760AE60F_CEC9_4DBD_B6CC_2459A83CA1BB

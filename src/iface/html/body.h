@@ -2,15 +2,15 @@
 #define GBF0EDE4D_0DFA_4F0A_92B4_964D076C8B00
 
 
-#include <html/details/symetric_tag.h>
+#include <html/details/symetric_tag_with_attributes.h>
 
 
 namespace html
 {
-class Body final : public details::SymetricTag
+class Body final : public details::SymetricTagWithAttributes
 {
 public:
-	Body() : SymetricTag(L"body") {}
+	Body() : SymetricTagWithAttributes(L"body") {}
 };
 }
 

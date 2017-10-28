@@ -5,7 +5,7 @@
 namespace html
 {
 Link::Link(const wchar_t *href):
-	SymetricTag(L"a")
+	SymetricTagWithAttributes(L"a")
 {
 	*this % Attribute(L"href", href);
 }

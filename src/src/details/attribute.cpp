@@ -4,7 +4,7 @@
 namespace html
 {
 Attribute::Attribute(const wchar_t *attribute, const wchar_t *value):
-	attribute(std::wstring(attribute) + L"=\"" + value + L"\"")
+	Attribute(std::wstring(attribute) + L"=\"" + value + L"\"")
 {}
 
 Attribute::Attribute(const wchar_t *attribute, bool value) :

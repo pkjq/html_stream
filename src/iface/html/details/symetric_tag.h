@@ -11,9 +11,7 @@ namespace html
 {
 namespace details
 {
-class SymetricTag :
-	public details::BlockStreamTemplateMethod,
-	public details::AttributeFunctionality
+class SymetricTag : public BlockStreamTemplateMethod
 {
 public:
 	explicit SymetricTag(std::wstring tag, bool writeWithConversion = true) :
@@ -27,7 +25,7 @@ private: // ITag
 	virtual std::wstring openTag() const override;
 	virtual std::wstring closeTag() const override;
 
-private:
+protected:
 	const std::wstring tag;
 };
 }

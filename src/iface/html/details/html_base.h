@@ -36,15 +36,19 @@ struct BlockStreamTemplateMethod: private ITag
 		return *this;
 	}
 
-	template <typename Type>
-	inline typename std::enable_if<!std::is_base_of<BlockStreamTemplateMethod, Type>::value, BlockStreamTemplateMethod>::type& operator << (const Type *data)
+	template <typename Type,
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+	>
+	inline auto& operator << (const Type *data)
 	{
 		bufferStream << data;
 		return *this;
 	}
 
-	template <typename Type>
-	inline typename std::enable_if<!std::is_base_of<BlockStreamTemplateMethod, Type>::value, BlockStreamTemplateMethod>::type& operator << (Type &&data)
+	template <typename Type,
+		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, Type>>
+	>
+	inline auto& operator << (Type &&data)
 	{
 		bufferStream << data;
 		return *this;
@@ -54,14 +58,14 @@ public:
 	////////////////////
 	// in own decorators
 	template <typename Type>
-	inline typename std::enable_if<std::is_base_of<BlockStreamTemplateMethod, Type>::value, BlockStreamTemplateMethod>::type& operator << (Type &data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator << (Type &data)
 	{
 		inLvalue(data);
 		return *this;
 	}
  
 	template <typename Type>
-	inline typename std::enable_if<std::is_base_of<BlockStreamTemplateMethod, Type>::value, BlockStreamTemplateMethod>::type& operator << (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
 		inRvalue(ctti::unnamed_type_id<Type>(), data);
 		return *this;
@@ -69,14 +73,14 @@ public:
 
 	// revert own decorators
 	template <typename Type>
-	inline typename std::enable_if<std::is_base_of<BlockStreamTemplateMethod, Type>::value, BlockStreamTemplateMethod>::type& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, Type>, BlockStreamTemplateMethod>& operator >> (Type &&data)
 	{
 		outRvalue(ctti::unnamed_type_id<Type>());
 		return *this;
 	}
 
 	template <typename Type>
-	inline typename std::enable_if<std::is_base_of<IRevert, Type>::value, BlockStreamTemplateMethod>::type& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<IRevert, Type>, BlockStreamTemplateMethod>& operator >> (Type &&data)
 	{
 		outRvalue(static_cast<ctti::unnamed_type_id_t>(data));
 		return *this;
@@ -148,7 +152,6 @@ inline std::wostream& operator<<(std::wostream &stream, details::BlockStreamTemp
 	return stream;
 }
 }
-
 
 
 #endif//G1D932C31_E9A0_4442_92D7_DD4E57E32A4B

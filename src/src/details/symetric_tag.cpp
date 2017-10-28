@@ -7,18 +7,7 @@ namespace details
 {
 std::wstring SymetricTag::openTag() const
 {
-	std::wstring resultTag = L"<";
-	resultTag += tag;
-
-	const auto attributes = GetAttributes();
-	if (!attributes.empty())
-	{
-		resultTag += L' ';
-		resultTag += attributes;
-	}
-	resultTag += L">";
-
-	return resultTag;
+	return std::wstring(L"<") + tag + L">\n";
 }
 
 std::wstring SymetricTag::closeTag() const

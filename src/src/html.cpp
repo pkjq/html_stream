@@ -12,5 +12,5 @@ static constexpr const wchar_t* tags[2] =
 };
 
 //////////////////////////////////////////////////////////////////////////
-Html::Html() : Tag(tags[0], tags[1], false) {}
+Html::Html() : Tag(tags[0], tags[1], true) {}
 }

@@ -4,6 +4,8 @@
 
 #include <html/details/symetric_tag.h>
 #include <html/head/meta.h>
+#include <html/head/title.h>
+#include <html/head/css.h>
 
 
 namespace html
@@ -14,16 +16,26 @@ public:
 	Head(): SymetricTag(L"head", false) {}
 
 public:
-	inline details::BlockStreamTemplateMethod& operator << (head::Meta &&entity)
+	template <typename Type>
+	inline typename std::enable_if_t<
+			std::is_base_of_v<head::Css,	std::decay_t<Type>> |
+			std::is_base_of_v<head::Title,	std::decay_t<Type>>,
+		Head>&
+	operator << (Type &&data)
 	{
-		return static_cast<details::BlockStreamTemplateMethod&>(*this) << entity.GetAsString();
-	}
-	inline details::BlockStreamTemplateMethod& operator << (const head::Meta &entity)
-	{
-		return static_cast<details::BlockStreamTemplateMethod&>(*this) << entity.GetAsString();
+		static_cast<details::BlockStreamTemplateMethod&>(*this) << data;
+		return *this;
 	}
 
-	using SymetricTag::operator<<;
+	template <typename Type>
+	inline typename std::enable_if_t<
+			std::is_base_of_v<head::Meta,	std::decay_t<Type>>,
+		Head>&
+	operator << (Type &&data)
+	{
+		static_cast<details::BlockStreamTemplateMethod&>(*this) << data.GetAsString();
+		return *this;
+	}
 };
 }
 
