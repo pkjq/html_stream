@@ -17,6 +17,8 @@
 #include <html/span.h>
 #include <html/fmt/hex.h>
 
+#include <html/push_pop.h>
+
 #include "etalon_path.h"
 #include <fstream>
 
@@ -114,20 +116,19 @@ TEST(html, CompareWithEtalon)
 				body << d2;
 			}
 
-			body << html::Span() % html::style::Color(L"red") << "Red text" << "+red text\n" >> html::Revert<html::Span>() << "This is default color text\n";
+			body << html::Push<html::Span>() % html::style::Color(L"red") << "Red text" << "+red text\n" >> html::Pop<html::Span>() << "This is default color text\n";
 
-			auto cyanColor = []() -> html::Span { return html::Span() % html::style::Color(L"cyan"); };
-			body << cyanColor() << "This is cyan color text\n";
-			body << "And this too\n" >> html::Revert<decltype(cyanColor())>();
+			const auto cyanColor = []() -> html::Span { return html::Span() % html::style::Color(L"cyan"); };
+			body << html::Push(cyanColor()) << "This is cyan color text\n" << "And this too\n" >> html::Pop(cyanColor());
 			body << "This is default color text\n";
 
 			body << "\n";
 
 			{ // double color
 				body <<
-						cyanColor() << "This is cyan color\n" <<
-							html::Span() % html::style::Color(L"magenta") << "another color " >> html::Revert<html::Span>() <<
-						"Cyan" >> html::Revert<html::Span>() <<
+						(cyanColor() << "This is cyan color\n" <<
+							html::Push<html::Span>() % html::style::Color(L"magenta") << "another color " >> html::Pop<html::Span>() <<
+						"Cyan") <<
 					"default color\n";
 
 			}
@@ -143,7 +144,7 @@ TEST(html, CompareWithEtalon)
 			html::Div div;
 			div << "This is div block\n";
 
-			div << html::Div() % titleAttr % html::Attribute(L"align=right") << "TEXT IN DIV WITH ATTR\n" >> html::Revert<html::Div>();
+			div << html::Push<html::Div>() % titleAttr % html::Attribute(L"align=right") << "TEXT IN DIV WITH ATTR\n" >> html::Pop<html::Div>();
 
 			body << div;
 			body << L"and again: ";
@@ -153,9 +154,9 @@ TEST(html, CompareWithEtalon)
 		body % html::Style(L"background-color", L"lightblue");
 
 		{
-			body << html::Link(L"https://www.w3schools.com") << L"W3S School" >> html::Revert<html::Link>() << "\n";
-			body << html::Link(L"https://www.w3schools.com") % html::style::Color(L"red") << L"W3S School" >> html::Revert<html::Link>() << "\n";
-			body << html::Link(L"#anchor-1") % html::style::Color(L"red") << L"Click me" >> html::Revert<html::Link>() << "\n";
+			body << html::Push<html::Link>(L"https://www.w3schools.com") << L"W3S School" >> html::Pop<html::Link>() << "\n";
+			body << html::Push<html::Link>(L"https://www.w3schools.com") % html::style::Color(L"red") << L"W3S School" >> html::Pop<html::Link>() << "\n";
+			body << html::Push<html::Link>(L"#anchor-1") % html::style::Color(L"red") << L"Click me" >> html::Pop<html::Link>() << "\n";
 		}
 
 		{ // code block
@@ -176,13 +177,13 @@ TEST(html, CompareWithEtalon)
 		body << "Text after div block";
 
 		{
-			body	<< html::Div()
+			body << html::Push<html::Div>()
 						% html::attribute::Id(L"anchor-1")
 						% html::Style(L"font-family", L"verdana")
 						% html::Style(L"font-size", L"20px")
 						% titleAttr
 						% html::style::Color(L"red")
-					<< "Custom div" >> html::Revert<html::Div>();
+					<< "Custom div" >> html::Pop<html::Div>();
 		}
 
 		body << html::fmt::Hex() % 0x123abc << " - hex value\n";

@@ -20,7 +20,7 @@ void BlockStreamTemplateMethod::flushBuffer() const
 	bufferStream.clear();
 }
 
-void BlockStreamTemplateMethod::inRvalue(ctti::unnamed_type_id_t typeIndex, const BlockStreamTemplateMethod &block)
+void BlockStreamTemplateMethod::pushValue(ctti::unnamed_type_id_t typeIndex, const BlockStreamTemplateMethod &block)
 {
 	flushBuffer();
 
@@ -30,7 +30,7 @@ void BlockStreamTemplateMethod::inRvalue(ctti::unnamed_type_id_t typeIndex, cons
 	closeTagStack.push_back({ typeIndex, block.closeTag() });
 }
 
-void BlockStreamTemplateMethod::inLvalue(const BlockStreamTemplateMethod &block)
+void BlockStreamTemplateMethod::copyValue(const BlockStreamTemplateMethod &block)
 {
 	flushBuffer();
 
@@ -40,7 +40,7 @@ void BlockStreamTemplateMethod::inLvalue(const BlockStreamTemplateMethod &block)
 	blockBody += block.closeTag();
 }
 
-void BlockStreamTemplateMethod::outRvalue(ctti::unnamed_type_id_t typeIndex)
+void BlockStreamTemplateMethod::popValue(ctti::unnamed_type_id_t typeIndex)
 {
 	auto it = std::find_if(std::rbegin(closeTagStack), std::rend(closeTagStack), [&typeIndex](const auto &decorator)
 	{

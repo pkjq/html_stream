@@ -18,8 +18,9 @@ public:
 public:
 	template <typename Type>
 	inline typename std::enable_if_t<
-			std::is_base_of_v<head::Css,	std::decay_t<Type>> |
-			std::is_base_of_v<head::Title,	std::decay_t<Type>>,
+			std::is_base_of_v<head::Css,		std::decay_t<Type>> |
+			std::is_base_of_v<head::Title,		std::decay_t<Type>> |
+			std::is_base_of_v<details::IPush,	std::decay_t<Type>>,
 		Head>&
 	operator << (Type &&data)
 	{
@@ -29,13 +30,15 @@ public:
 
 	template <typename Type>
 	inline typename std::enable_if_t<
-			std::is_base_of_v<head::Meta,	std::decay_t<Type>>,
+			std::is_base_of_v<head::Meta,		std::decay_t<Type>>,
 		Head>&
 	operator << (Type &&data)
 	{
 		static_cast<details::BlockStreamTemplateMethod&>(*this) << data.GetAsString();
 		return *this;
 	}
+
+	using details::SymetricTag::operator >> ;
 };
 }
 

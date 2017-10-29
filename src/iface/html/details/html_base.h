@@ -7,26 +7,14 @@
 #include <list>
 #include <type_traits>
 #include <ctti/type_id.hpp>
+#include <html/details/push_pop_iface.h>
+#include <html/details/tag_iface.h>
 
 
 namespace html
 {
 namespace details
 {
-struct ITag
-{
-	virtual std::wstring openTag() const = 0;
-	virtual std::wstring closeTag() const = 0;
-
-public:
-	virtual ~ITag() = default;
-};
-
-struct IRevert {};
-
-
-
-
 struct BlockStreamTemplateMethod: private ITag
 {
 	// std stream functionality
@@ -37,7 +25,10 @@ struct BlockStreamTemplateMethod: private ITag
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
+		typename = typename std::enable_if_t<
+			!std::is_base_of_v<BlockStreamTemplateMethod,	std::decay_t<Type>> &&
+			!std::is_base_of_v<IPush,						std::decay_t<Type>>
+		>
 	>
 	inline auto& operator << (const Type *data)
 	{
@@ -46,7 +37,10 @@ struct BlockStreamTemplateMethod: private ITag
 	}
 
 	template <typename Type,
-		typename = typename std::enable_if_t<!std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>>
+		typename = typename std::enable_if_t<
+			!std::is_base_of_v<BlockStreamTemplateMethod,	std::decay_t<Type>> &&
+			!std::is_base_of_v<IPush,						std::decay_t<Type>>
+		>
 	>
 	inline auto& operator << (Type &&data)
 	{
@@ -55,34 +49,24 @@ struct BlockStreamTemplateMethod: private ITag
 	}
 
 public:
-	////////////////////
-	// in own decorators
-	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &data)
-	{
-		inLvalue(data);
-		return *this;
-	}
- 
 	template <typename Type>
 	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
-		inRvalue(ctti::unnamed_type_id<Type>(), data);
-		return *this;
-	}
-
-	// revert own decorators
-	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
-	{
-		outRvalue(ctti::unnamed_type_id<Type>());
+		copyValue(data);
 		return *this;
 	}
 
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<IRevert, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of_v<IPush, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
-		outRvalue(static_cast<ctti::unnamed_type_id_t>(data));
+		pushValue(static_cast<ctti::unnamed_type_id_t>(data), data.obj);
+		return *this;
+	}
+
+	template <typename Type>
+	inline typename std::enable_if_t<std::is_base_of_v<IPop, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
+	{
+		popValue(static_cast<ctti::unnamed_type_id_t>(data));
 		return *this;
 	}
 
@@ -109,9 +93,9 @@ protected:
 	virtual ~BlockStreamTemplateMethod() = default;
 
 private:
-	void inRvalue(ctti::unnamed_type_id_t typeIndex, const BlockStreamTemplateMethod &block);
-	void inLvalue(const BlockStreamTemplateMethod &block);
-	void outRvalue(ctti::unnamed_type_id_t typeIndex);
+	void pushValue(ctti::unnamed_type_id_t typeIndex, const BlockStreamTemplateMethod &block);
+	void copyValue(const BlockStreamTemplateMethod &block);
+	void popValue(ctti::unnamed_type_id_t typeIndex);
 
 	void flushBuffer() const;
 	std::wstring getBlockBody() const;
@@ -125,24 +109,6 @@ private:
 	mutable std::wstring blockBody;
 };
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-template <typename Type>
-struct Revert: public details::IRevert
-{
-	inline explicit constexpr operator ctti::unnamed_type_id_t() const
-	{
-		return GetType<Type>();
-	}
-
-private:
-	template <typename Type2, class = typename std::enable_if<std::is_class<Type2>::value>::type>
-	ctti::unnamed_type_id_t GetType() const
-	{
-		return ctti::unnamed_type_id<Type2>();
-	}
-};
 
 
 //////////////////////////////////////////////////////////////////////////
