@@ -17,6 +17,7 @@
 #include <html/span.h>
 
 #include <html/progress.h>
+#include <html/meter.h>
 
 #include <html/fmt/hex.h>
 
@@ -107,6 +108,21 @@ TEST(html, CompareWithEtalon)
 		// progress
 		for (uint32_t val = 0; val <= 10; val++)
 			body << html::Progress(10, val) << html::Progress(10, 10-val) << "\n";
+
+		{ // meter
+			for (uint32_t i = 0; i <= 100; i += 10)
+				body << html::Meter(0, 30, 70, 100, 15, i);
+
+			body << "\n";
+			for (uint32_t i = 0; i <= 100; i += 10)
+				body << html::Meter(0, 30, 70, 100, 50, i);
+
+			body << "\n";
+			for (uint32_t i = 0; i <= 100; i += 10)
+				body << html::Meter(0, 30, 70, 100, 80, i);
+
+			body << "\n\n";
+		}
 
 		// Color test
 		{
