@@ -15,6 +15,9 @@
 #include <html/comment.h>
 #include <html/div.h>
 #include <html/span.h>
+
+#include <html/progress.h>
+
 #include <html/fmt/hex.h>
 
 #include <html/push_pop.h>
@@ -100,6 +103,10 @@ TEST(html, CompareWithEtalon)
 		body << "    spaces test\n";
 
 		body << "\n\n";
+
+		// progress
+		for (uint32_t val = 0; val <= 10; val++)
+			body << html::Progress(10, val) << html::Progress(10, 10-val) << "\n";
 
 		// Color test
 		{
