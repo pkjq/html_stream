@@ -19,6 +19,8 @@
 #include <html/progress.h>
 #include <html/meter.h>
 
+#include <html/details.h>
+
 #include <html/fmt/hex.h>
 
 #include <html/push_pop.h>
@@ -158,6 +160,19 @@ TEST(html, CompareWithEtalon)
 		}
 
 		body << "\n\n";
+
+		{ // collapsible block
+			{ // closed
+				html::Details block(L"closed block", false);
+				block << "line 1\n" << "line2\n";
+				body << block;
+			}
+			body << "\n";
+			{ // opened
+				html::Details block(L"opened block", true);
+				block << "line 1\n" << "line2\n";
+				body << block;
+			}		}
 
 		body << (html::Comment() << "this is " << "comment\n" << "This is line two of comment");
 
