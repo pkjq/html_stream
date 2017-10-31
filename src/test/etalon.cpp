@@ -239,6 +239,8 @@ TEST(html, CompareWithEtalon)
 		ASSERT_TRUE(fileStream.is_open());
 
 		fileStream << html;
+
+		EXPECT_TRUE(false);
 	}
 	else
 	{
