@@ -34,8 +34,8 @@ string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
 #---
 #add submodules includes
-include_directories(${CMAKE_SOURCE_DIR}/external/ctti/include)
-include_directories(${CMAKE_SOURCE_DIR}/external/MyHeaders/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/ctti/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/MyHeaders/include)
 #---
 
 
