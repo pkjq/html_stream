@@ -24,14 +24,20 @@ PROJECT(${PROJECT_NAME})
 	list(FILTER ProjectAllSources 			EXCLUDE REGEX ".*mock.*")
 	list(FILTER ProjectPrivateMockSources 	INCLUDE REGEX ".*mock.*")
 
-	# Grouping
-	source_group("Sources" 					FILES ${ProjectAllSources}})
+	# ==== Grouping ====
+	## Sources
+	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Sources" FILES ${ProjectAllSources})
 
-	get_property(ProjectIfaceSources 		TARGET ${ProjectIfaceLib} 		PROPERTY INTERFACE_SOURCES)
-	source_group("Iface" 					FILES ${ProjectIfaceSources})
+	## Ifaces
+	get_property(ProjectIfaceSources 			TARGET ${ProjectIfaceLib} 			PROPERTY INTERFACE_SOURCES)
+	get_property(ProjectIfaceIcludeDir 			TARGET ${ProjectIfaceLib} 			PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+	source_group(TREE ${ProjectIfaceIcludeDir} PREFIX "Iface" FILES ${ProjectIfaceSources})
 	
-#	get_property(ProjectPublicMockSources 	TARGET ${ProjectPublicMockLib} 	PROPERTY INTERFACE_SOURCES)
-#	source_group("Mocks" 					FILES ${ProjectPrivateMockSources} ${ProjectPublicMockSources})
+	## Mocks
+	#get_property(ProjectPublicMockSources 		TARGET ${ProjectPublicMockLib} 		PROPERTY INTERFACE_SOURCES)
+	#get_property(ProjectPublicMockIcludeDir 	TARGET ${ProjectPublicMockLib} 		PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+	#source_group(TREE ${ProjectPublicMockIcludeDir} PREFIX "Mocks" FILES ${ProjectPublicMockSources})
+	# =================
 
 	# Link target
 	target_link_libraries(${ProjectOutputName}
