@@ -14,9 +14,11 @@ namespace details
 class SymetricTag : public BlockStreamTemplateMethod
 {
 public:
-	explicit SymetricTag(std::wstring tag, bool writeWithConversion = true) :
+	explicit SymetricTag(std::wstring tag, bool writeWithConversion = true, bool newLineAfterOpen = false, bool newLineAfterClose = false) :
 		details::BlockStreamTemplateMethod(writeWithConversion),
-		tag(std::move(tag))
+		tag(std::move(tag)),
+		newLineAfterOpenTag(newLineAfterOpen),
+		newLineAfterCloseTag(newLineAfterClose)
 	{}
 
 	SymetricTag(const SymetricTag&) = default;
@@ -27,6 +29,8 @@ private: // ITag
 
 protected:
 	const std::wstring tag;
+	const bool newLineAfterOpenTag;
+	const bool newLineAfterCloseTag;
 };
 }
 }

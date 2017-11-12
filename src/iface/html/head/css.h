@@ -12,7 +12,7 @@ namespace head
 class Css final : public details::SymetricTag
 {
 public:
-	Css(): SymetricTag(L"style", false) {}
+	explicit Css() : SymetricTag(L"style", false, true, true) {}
 
 public:
 	// std stream functionality

@@ -7,12 +7,22 @@ namespace details
 {
 std::wstring SymetricTag::openTag() const
 {
-	return std::wstring(L"<") + tag + L">\n";
+	auto result = std::wstring(L"<") + tag + L">";
+
+	if (newLineAfterOpenTag)
+		result += L'\n';
+
+	return result;
 }
 
 std::wstring SymetricTag::closeTag() const
 {
-	return std::wstring(L"</") + tag + L">\n";
+	auto result = std::wstring(L"</") + tag + L">";
+
+	if (newLineAfterCloseTag)
+		result += L'\n';
+
+	return result;
 }
 }
 }

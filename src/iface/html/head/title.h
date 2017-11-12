@@ -12,7 +12,7 @@ namespace head
 class Title final : public details::SymetricTag
 {
 public:
-	Title(): SymetricTag(L"title") {}
+	Title(): SymetricTag(L"title", true, false, true) {}
 
 public:
 	// std stream functionality

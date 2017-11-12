@@ -13,7 +13,7 @@ namespace html
 class Head final : public details::SymetricTag
 {
 public:
-	Head(): SymetricTag(L"head", false) {}
+	Head(): SymetricTag(L"head", false, true, true) {}
 
 public:
 	template <typename Type>
