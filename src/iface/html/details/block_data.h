@@ -12,7 +12,7 @@ namespace details
 class BlockData
 {
 public:
-	BlockData(std::wstring data): data(std::move(data)) {}
+	explicit BlockData(std::wstring data): data(std::move(data)) {}
 
 public:
 	std::wstring GetAsString() const &	{ return data; }
