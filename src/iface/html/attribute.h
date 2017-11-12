@@ -3,19 +3,22 @@
 
 
 #include <string>
-#include <html/details/block_data.h>
 
 
 namespace html
 {
-class Attribute: public details::BlockData
+class Attribute
 {
 public:
-	explicit Attribute(std::wstring attribute):		BlockData(std::move(attribute)) {}
-	explicit Attribute(const wchar_t *attribute):	BlockData(attribute) {}
+	explicit Attribute(std::wstring attribute, const char*) = delete;
 
-	explicit Attribute(const wchar_t *attribute, const wchar_t *value);
-	explicit Attribute(const wchar_t *attribute, bool value);
+	explicit Attribute(std::wstring attribute, const wchar_t *value);
+	explicit Attribute(std::wstring attribute, std::wstring attrValue);
+	explicit Attribute(std::wstring attribute, bool boolValue);
+
+public:
+	const std::wstring attribute;
+	const std::wstring value;
 };
 
 
@@ -25,8 +28,7 @@ namespace attribute
 class Id final : public Attribute
 {
 public:
-	template <typename ...Type>
-	Id(Type ... args) : Attribute(L"id", args...) {}
+	explicit Id(std::wstring id) : Attribute(L"id", std::move(id)) {}
 };
 
 class Class final : public Attribute
@@ -39,8 +41,7 @@ public:
 class Title final : public Attribute
 {
 public:
-	template <typename ...Type>
-	Title(Type ... args) : Attribute(L"title", args...) {}
+	explicit Title(std::wstring title) : Attribute(L"title", std::move(title)) {}
 };
 
 class For final : public Attribute
@@ -53,7 +54,13 @@ public:
 class Checked final : public Attribute
 {
 public:
-	Checked() : Attribute(L"checked") {}
+	explicit Checked() : Attribute(L"checked", std::wstring()) {}
+};
+
+class Hidden final : public Attribute
+{
+public:
+	explicit Hidden() : Attribute(L"hidden", std::wstring()) {}
 };
 }
 }

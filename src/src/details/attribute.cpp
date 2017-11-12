@@ -3,11 +3,18 @@
 
 namespace html
 {
-Attribute::Attribute(const wchar_t *attribute, const wchar_t *value):
-	Attribute(std::wstring(attribute) + L"=\"" + value + L"\"")
+Attribute::Attribute(std::wstring attribute, const wchar_t *value):
+	Attribute(attribute, std::wstring(value))
+{
+}
+
+Attribute::Attribute(std::wstring attribute, std::wstring attrValue):
+	attribute(std::move(attribute)),
+	value(std::move(attrValue))
 {}
 
-Attribute::Attribute(const wchar_t *attribute, bool value) :
-	Attribute(attribute, value ? L"true" : L"false")
+Attribute::Attribute(std::wstring attribute, bool boolValue) :
+	attribute(std::move(attribute)),
+	value(boolValue ? L"true" : L"false")
 {}
 }

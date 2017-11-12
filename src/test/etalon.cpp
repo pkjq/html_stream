@@ -182,7 +182,7 @@ TEST(html, CompareWithEtalon)
 			html::Div div;
 			div << "This is div block\n";
 
-			div << html::Push<html::Div>() % titleAttr % html::Attribute(L"align=right") << "TEXT IN DIV WITH ATTR\n" >> html::Pop<html::Div>();
+			div << html::Push<html::Div>() % titleAttr % html::Attribute(L"align", L"right") << "TEXT IN DIV WITH ATTR\n" >> html::Pop<html::Div>();
 
 			body << div;
 			body << L"and again: ";
@@ -222,6 +222,18 @@ TEST(html, CompareWithEtalon)
 						% titleAttr
 						% html::style::Color(L"red")
 					<< "Custom div" >> html::Pop<html::Div>();
+		}
+
+		{
+			html::Div block;
+			block % html::attribute::Class(L"class-1");
+			block % html::attribute::Class(L"class-2");
+			block % html::attribute::Class(L"class-3");
+
+			block % html::attribute::Id(L"id-1");
+			block % html::attribute::Id(L"id-2"); // must rewrite id-1
+
+			body << block;
 		}
 
 		body << html::fmt::Hex() % 0x123abc << " - hex value\n";

@@ -5,6 +5,7 @@
 #include <html/attribute.h>
 #include <html/style.h>
 #include <string>
+#include <unordered_map>
 #include <type_traits>
 
 
@@ -15,10 +16,7 @@ namespace details
 class AttributeFunctionality
 {
 public:
-	void operator % (const Attribute &attribute)
-	{
-		addTo(attribute.GetAsString(), attributes);
-	}
+	void operator % (const Attribute &attribute);
 
 	void operator % (const Style &style)
 	{
@@ -36,8 +34,10 @@ private:
 		to += what;
 	}
 
+	std::wstring getAttributesAsString() const;
+
 private:
-	std::wstring attributes;
+	std::unordered_map<std::wstring, std::wstring> attributes;
 	std::wstring inlineStyle;
 };
 
