@@ -27,7 +27,7 @@ void BlockStreamTemplateMethod::pushValue(ctti::unnamed_type_id_t typeIndex, con
 	blockBody += block.openTag();
 	blockBody += block.getBlockBody();
 
-	closeTagStack.push_back({ typeIndex, block.closeTag() });
+	closeTagStack.push_back(std::make_tuple(typeIndex, block.closeTag()));
 }
 
 void BlockStreamTemplateMethod::copyValue(const BlockStreamTemplateMethod &block)

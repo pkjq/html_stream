@@ -18,9 +18,9 @@ public:
 public:
 	template <typename Type>
 	inline typename std::enable_if_t<
-			std::is_base_of_v<head::Css,		std::decay_t<Type>> |
-			std::is_base_of_v<head::Title,		std::decay_t<Type>> |
-			std::is_base_of_v<details::IPush,	std::decay_t<Type>>,
+			std::is_base_of<head::Css,		std::decay_t<Type>>::value |
+			std::is_base_of<head::Title,	std::decay_t<Type>>::value |
+			std::is_base_of<details::IPush,	std::decay_t<Type>>::value,
 		Head>&
 	operator << (Type &&data)
 	{
@@ -30,7 +30,7 @@ public:
 
 	template <typename Type>
 	inline typename std::enable_if_t<
-			std::is_base_of_v<head::Meta,		std::decay_t<Type>>,
+			std::is_base_of<head::Meta,		std::decay_t<Type>>::value,
 		Head>&
 	operator << (Type &&data)
 	{

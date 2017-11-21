@@ -10,11 +10,12 @@ Meter::Meter(double min, double low, double high, double max, double optimum, do
 {
 	std::wstringstream buffer;
 
+#define HTML_CHAR_TO_WCHAR(what) L##what
 #define HtmlMeterWriteAttr(attr) \
 	{ \
 		buffer.str({}); \
 		buffer << attr; \
-		*this % Attribute(L#attr, buffer.str().c_str()); \
+		*this % Attribute(HTML_CHAR_TO_WCHAR(#attr), buffer.str().c_str()); \
 	}
 
 

@@ -36,7 +36,7 @@ public:
 	}
 
 private:
-	template <typename Type2, class = typename std::enable_if_t<std::is_class_v<Type2>>>
+	template <typename Type2, class = typename std::enable_if_t<std::is_class<Type2>::value>>
 	inline constexpr ctti::unnamed_type_id_t GetType() const
 	{
 		return ctti::unnamed_type_id<Type2>();
@@ -57,7 +57,7 @@ struct PopImpl final: public IPop
 	}
 
 private:
-	template <typename Type2, class = typename std::enable_if_t<std::is_class_v<Type2>>>
+	template <typename Type2, class = typename std::enable_if_t<std::is_class<Type2>::value>>
 	inline constexpr ctti::unnamed_type_id_t GetType() const
 	{
 		return ctti::unnamed_type_id<Type2>();

@@ -45,11 +45,11 @@ std::wstring ConvertToHtmlFormat(const std::wstring &input)
 			result += L"&apos;";
 			break;
 
-		case L'©':
+		case 0xA9: //'©'
 			result += L"&copy;";
 			break;
 
-		case L'®':
+		case 0xAE: //'®'
 			result += L"&reg;";
 			break;
 

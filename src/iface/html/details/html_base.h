@@ -26,8 +26,8 @@ struct BlockStreamTemplateMethod: private ITag
 
 	template <typename Type,
 		typename = typename std::enable_if_t<
-			!std::is_base_of_v<BlockStreamTemplateMethod,	std::decay_t<Type>> &&
-			!std::is_base_of_v<IPush,						std::decay_t<Type>>
+			!std::is_base_of<BlockStreamTemplateMethod,	std::decay_t<Type>>::value &&
+			!std::is_base_of<IPush,						std::decay_t<Type>>::value
 		>
 	>
 	inline auto& operator << (const Type *data)
@@ -38,8 +38,8 @@ struct BlockStreamTemplateMethod: private ITag
 
 	template <typename Type,
 		typename = typename std::enable_if_t<
-			!std::is_base_of_v<BlockStreamTemplateMethod,	std::decay_t<Type>> &&
-			!std::is_base_of_v<IPush,						std::decay_t<Type>>
+			!std::is_base_of<BlockStreamTemplateMethod,	std::decay_t<Type>>::value &&
+			!std::is_base_of<IPush,						std::decay_t<Type>>::value
 		>
 	>
 	inline auto& operator << (Type &&data)
@@ -50,21 +50,21 @@ struct BlockStreamTemplateMethod: private ITag
 
 public:
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<BlockStreamTemplateMethod, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of<BlockStreamTemplateMethod, std::decay_t<Type>>::value, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
 		copyValue(data);
 		return *this;
 	}
 
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<IPush, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator << (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of<IPush, std::decay_t<Type>>::value, BlockStreamTemplateMethod>& operator << (Type &&data)
 	{
 		pushValue(static_cast<ctti::unnamed_type_id_t>(data), data.obj);
 		return *this;
 	}
 
 	template <typename Type>
-	inline typename std::enable_if_t<std::is_base_of_v<IPop, std::decay_t<Type>>, BlockStreamTemplateMethod>& operator >> (Type &&data)
+	inline typename std::enable_if_t<std::is_base_of<IPop, std::decay_t<Type>>::value, BlockStreamTemplateMethod>& operator >> (Type &&data)
 	{
 		popValue(static_cast<ctti::unnamed_type_id_t>(data));
 		return *this;
