@@ -5,7 +5,7 @@
 #include <html/attribute.h>
 #include <html/style.h>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <type_traits>
 
 
@@ -37,7 +37,7 @@ private:
 	std::wstring getAttributesAsString() const;
 
 private:
-	std::unordered_map<std::wstring, std::wstring> attributes;
+	std::map<std::wstring, std::wstring> attributes;
 	std::wstring inlineStyle;
 };
 
