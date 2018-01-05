@@ -1,0 +1,10 @@
+#############################################################################################
+#	add submodules includes here
+#
+# * use ${CMAKE_SOURCE_DIR} for shared includes for including it from ROOT project
+# * use ${CMAKE_CURRENT_SOURCE_DIR} for private includes for including it from current project
+#############################################################################################
+
+
+include_directories(${CMAKE_SOURCE_DIR}/external/MyHeaders/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/ctti/include)

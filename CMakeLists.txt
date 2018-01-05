@@ -14,6 +14,7 @@ endif()
 
 # set output directory for all executable modules
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -33,9 +34,8 @@ string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
 
 #---
-#add submodules includes
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/ctti/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/MyHeaders/include)
+include(CMake_ExnternalIncludes.txt OPTIONAL)
+include(CMake_Additional.txt OPTIONAL)
 #---
 
 
@@ -51,3 +51,6 @@ endif()
 
 
 add_subdirectory(src)
+
+#include(SourceCollector)
+#AddSubDirectoryIfMakeFileExist(${CMAKE_CURRENT_SOURCE_DIR}/external)
